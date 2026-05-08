@@ -1,0 +1,45 @@
+- id: INC-001
+  alert_text: "DB connection pool exhausted on payments-service"
+  service: payments-service
+  root_cause: "Connection leak in checkout flow introduced in PR #1142"
+  resolution_steps: "Rolled back PR #1142, restarted connection pool, added max_pool_size cap"
+  resolver: "@priya.sharma"
+  duration_mins: 47
+  pr_link: "github.com/org/payments/pull/1142"
+  timestamp: "2024-11-14T02:31:00Z"
+- id: INC-002
+  alert_text: "High latency on login endpoint"
+  service: auth-service
+  root_cause: "Unindexed query in user roles lookup table"
+  resolution_steps: "Added index to user_id column, deployed hotfix"
+  resolver: "@alex.chen"
+  duration_mins: 22
+  pr_link: "github.com/org/auth/pull/893"
+  timestamp: "2024-10-05T14:15:00Z"
+- id: INC-003
+  alert_text: "Cache miss rate spiked to 80%"
+  service: recommendation-engine
+  root_cause: "Redis eviction policy misconfigured after upgrade"
+  resolution_steps: "Changed policy to allkeys-lru, increased Redis memory limit"
+  resolver: "@david.miller"
+  duration_mins: 65
+  pr_link: "github.com/org/recommendations/pull/302"
+  timestamp: "2024-09-21T09:45:00Z"
+- id: INC-004
+  alert_text: "Email delivery delays > 1 hour"
+  service: notification-service
+  root_cause: "Rate limited by upstream provider (SendGrid)"
+  resolution_steps: "Implemented exponential backoff, requested quota increase"
+  resolver: "@sarah.jones"
+  duration_mins: 120
+  pr_link: "github.com/org/notifications/pull/551"
+  timestamp: "2024-12-02T18:30:00Z"
+- id: INC-005
+  alert_text: "502 Bad Gateway errors for API v1"
+  service: api-gateway
+  root_cause: "Nginx configuration syntax error in latest deployment"
+  resolution_steps: "Reverted Nginx config to previous version, added pre-flight config check"
+  resolver: "@mike.williams"
+  duration_mins: 15
+  pr_link: "github.com/org/gateway/pull/210"
+  timestamp: "2025-01-10T11:05:00Z"

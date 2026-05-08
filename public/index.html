@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>InciWatch Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .sys-avatar { background:#334155; font-size:16px; }
+    </style>
+</head>
+<body>
+    <nav class="top-nav">
+        <div class="nav-left">
+            <div class="logo">InciWatch</div>
+            <div class="nav-tabs">
+                <button class="tab-btn active" data-tab="ops">📡 Live Monitor</button>
+                <button class="tab-btn" data-tab="report">📊 Intelligence Report</button>
+            </div>
+        </div>
+        <div class="nav-right">
+            <label class="sound-toggle"><input type="checkbox" id="sound-toggle" checked> 🔊</label>
+            <div class="resolved-badge">3 incidents resolved today 🎉</div>
+        </div>
+    </nav>
+
+    <div class="view-container" id="view-ops">
+        <div class="dashboard-container">
+            <!-- Left Panel -->
+            <aside class="panel left-panel">
+                <div class="panel-header">
+                    <h2>🔴 Alert Simulator</h2>
+                </div>
+                <div class="panel-content">
+                    <form id="alert-form">
+                        <div class="form-group">
+                            <label>Severity</label>
+                            <select id="severity" required>
+                                <option value="P1">P1 - Critical</option>
+                                <option value="P2" selected>P2 - High</option>
+                                <option value="P3">P3 - Medium</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Service</label>
+                            <select id="service" required>
+                                <option value="payments-service">payments-service</option>
+                                <option value="auth-service">auth-service</option>
+                                <option value="recommendation-engine">recommendation-engine</option>
+                                <option value="notification-service">notification-service</option>
+                                <option value="api-gateway">api-gateway</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Alert Text</label>
+                            <textarea id="alert-text" rows="3" required>DB connection pool exhausted</textarea>
+                        </div>
+                        <button type="submit" class="btn-fire-alert">
+                            <span class="pulse-icon"></span> Fire Alert
+                        </button>
+                    </form>
+
+                    <div class="quick-fire-section">
+                        <h3>Quick-Fire Presets</h3>
+                        <button class="preset-btn" data-severity="P1" data-service="payments-service" data-text="DB connection pool exhausted on checkout">DB pool exhausted - payments</button>
+                        <button class="preset-btn" data-severity="P1" data-service="auth-service" data-text="Auth token validation failing for region us-east">Auth token validation failing</button>
+                        <button class="preset-btn" data-severity="P2" data-service="recommendation-engine" data-text="High latency spike in recommendation query">Recommendation latency spike</button>
+                        <button class="preset-btn" data-severity="P2" data-service="api-gateway" data-text="502 Bad Gateway errors spiking on external routes">API gateway 502s</button>
+                    </div>
+
+                    <div class="demo-section" style="margin-top: 30px;">
+                        <button id="btn-demo" class="btn-primary" style="background:#8b5cf6; color:#fff; border-bottom: 3px solid #6d28d9;">🎬 Run Demo Sequence</button>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Center Panel -->
+            <main class="panel center-panel">
+                <div class="panel-header">
+                    <h2># live-incident-thread</h2>
+                    <div class="live-indicator">
+                        <span class="pulse-dot red"></span> LIVE Monitoring #incidents · #alerts
+                    </div>
+                </div>
+                <div class="feed-container" id="feed-container">
+                    
+                    <!-- Historic Incident 1 -->
+                    <div class="message-block">
+                        <div class="bot-avatar alert-avatar">🚨</div>
+                        <div class="message-content">
+                            <strong>🚨 ALERT BOT</strong> <span class="time">09:12 AM</span>
+                            <div class="alert-message">
+                                [P3] High CPU utilization on background worker<br>
+                                <span style="color:var(--text-muted)">Service: batch-processor</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="message-block">
+                        <div class="bot-avatar inciwatch-avatar">🤖</div>
+                        <div class="message-content">
+                            <strong>InciWatch</strong> <span class="time">09:12 AM</span>
+                            <div class="context-card" style="margin-top:0;">
+                                <div class="card-header">
+                                    <div class="card-title">🧠 Context found in memory</div>
+                                </div>
+                                <div class="card-body">
+                                    <div class="match-item" style="border:none; margin:0; padding:0;">
+                                        <span class="match-id">INC-042</span> - Restart worker pods. (Resolved by @david.miller)
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="message-block" style="opacity: 0.7;">
+                        <div class="bot-avatar sys-avatar">✓</div>
+                        <div class="message-content">
+                            <strong>System</strong> <span class="time">09:18 AM</span>
+                            <p>Incident resolved by @david.miller. MTTR: 6 mins.</p>
+                        </div>
+                    </div>
+
+                    <!-- Historic Incident 2 -->
+                    <div class="message-block" style="margin-top:20px;">
+                        <div class="bot-avatar alert-avatar">🚨</div>
+                        <div class="message-content">
+                            <strong>🚨 ALERT BOT</strong> <span class="time">10:45 AM</span>
+                            <div class="alert-message">
+                                [P2] Redis cache miss rate spiked<br>
+                                <span style="color:var(--text-muted)">Service: recommendation-engine</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="message-block">
+                        <div class="bot-avatar inciwatch-avatar">🤖</div>
+                        <div class="message-content">
+                            <strong>InciWatch</strong> <span class="time">10:45 AM</span>
+                            <div class="context-card" style="margin-top:0;">
+                                <div class="card-header">
+                                    <div class="card-title">🧠 Context found in memory</div>
+                                </div>
+                                <div class="card-body">
+                                    <div class="match-item" style="border:none; margin:0; padding:0;">
+                                        <span class="match-id">INC-003</span> - Changed policy to allkeys-lru. (Resolved by @david.miller)
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="message-block" style="opacity: 0.7;">
+                        <div class="bot-avatar sys-avatar">✓</div>
+                        <div class="message-content">
+                            <strong>System</strong> <span class="time">10:52 AM</span>
+                            <p>Incident resolved by @sarah.jones. MTTR: 7 mins.</p>
+                        </div>
+                    </div>
+                    
+                    <div style="text-align: center; margin: 20px 0; border-top: 1px solid var(--panel-border); padding-top: 10px;">
+                        <span style="background: var(--panel-bg); color: var(--text-muted); font-size: 11px; padding: 0 10px; position:relative; top:-18px;">End of History</span>
+                    </div>
+                </div>
+            </main>
+
+            <!-- Right Panel -->
+            <aside class="panel right-panel">
+                <div class="panel-header">
+                    <h2>🧠 Incident Memory</h2>
+                    <button id="open-modal-btn" class="btn-outline">+ Log Resolution</button>
+                </div>
+                <div class="memory-list" id="memory-list">
+                    <!-- Memory cards loaded here -->
+                </div>
+            </aside>
+        </div>
+    </div>
+
+    <!-- Intelligence Report View -->
+    <div class="view-container hidden" id="view-report">
+        <div class="report-dashboard">
+            <div class="report-header">
+                <h2>Weekly Intelligence Report</h2>
+                <button class="btn-slack" id="btn-slack">📤 Push to Slack</button>
+            </div>
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div class="metric-label">Total Incidents (This Week)</div>
+                    <div class="metric-value" id="m-total">-</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">Avg MTTR</div>
+                    <div class="metric-value" id="m-mttr">-</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">Top Resolver</div>
+                    <div class="metric-value" id="m-resolver">-</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">Most Common Alert</div>
+                    <div class="metric-value m-text" id="m-common">-</div>
+                </div>
+            </div>
+            <div class="report-body">
+                <div class="chart-container panel">
+                    <h3>Most Affected Services</h3>
+                    <div style="height: 300px;">
+                        <canvas id="serviceChart"></canvas>
+                    </div>
+                </div>
+                <div class="gap-container panel">
+                    <h3>Knowledge Gaps</h3>
+                    <p class="text-muted">Services with 0 past incidents logged. At higher risk for slower resolution times.</p>
+                    <ul id="knowledge-gaps" class="gap-list"></ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for Log Resolution -->
+    <div id="resolve-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Log Incident Resolution</h2>
+                <span class="close-modal">&times;</span>
+            </div>
+            <form id="resolve-form">
+                <div class="form-group">
+                    <label>Incident ID</label>
+                    <input type="text" id="res-incident-id" required placeholder="INC-006">
+                </div>
+                <div class="form-group">
+                    <label>Resolver</label>
+                    <input type="text" id="res-resolver" required placeholder="@username">
+                </div>
+                <div class="form-group">
+                    <label>Resolution Summary</label>
+                    <textarea id="res-summary" rows="3" required placeholder="What steps fixed the issue?"></textarea>
+                </div>
+                <button type="submit" class="btn-primary">Save to Memory</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Toast -->
+    <div id="toast" class="toast">Weekly digest sent to #incidents and manager on WhatsApp ✅</div>
+
+    <script src="app.js"></script>
+</body>
+</html>
