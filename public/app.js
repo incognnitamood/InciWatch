@@ -1,4 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
+    let myChart = null;
     loadMemory();
     generateReport();
     scrollToBottom(); // scroll to end of pre-loaded history
@@ -46,7 +47,6 @@ document.addEventListener('DOMContentLoaded', () => {
         } catch(e) {}
     }
 
-    let myChart = null;
     async function generateReport() {
         try {
             const res = await fetch('/api/incidents');

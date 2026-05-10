@@ -16,5 +16,14 @@
     "express": "^5.2.1",
     "js-yaml": "^4.1.1",
     "node-fetch": "^3.3.2"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/incognnitamood/InciWatch.git"
+  },
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/incognnitamood/InciWatch/issues"
+  },
+  "homepage": "https://github.com/incognnitamood/InciWatch#readme"
 }
